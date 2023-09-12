@@ -14,7 +14,8 @@ const resolvers = {
     },
 
     Mutation: {
-        createUser: () => {
+        createUsername: (parent, {username}, contextValue, info) => {
+            console.log(`contextValue from mutation: `, contextValue);
             return null;
         },
 

@@ -1,10 +1,10 @@
 "use client";
-
-import {ApolloClient, InMemoryCache, ApolloProvider, gql} from "@apollo/client";
 import {ReactNode} from "react";
+import {ApolloClient, ApolloProvider, InMemoryCache} from "@apollo/client";
 
 export const client = new ApolloClient({
     uri: "http://localhost:4000/graphql",
+    credentials: "include",
     cache: new InMemoryCache(),
 });
 

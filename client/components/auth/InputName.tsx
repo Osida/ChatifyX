@@ -12,7 +12,7 @@ interface FormSchema {
     username: string;
 }
 
-const UsernameInput = ({onSubmit}: Props) => {
+const InputName = ({onSubmit}: Props) => {
     const {register, handleSubmit, watch, formState: {errors}} = useForm<FormSchema>();
 
     return (
@@ -28,4 +28,4 @@ const UsernameInput = ({onSubmit}: Props) => {
     );
 };
 
-export default UsernameInput;
+export default InputName;

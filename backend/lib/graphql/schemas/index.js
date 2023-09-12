@@ -26,7 +26,7 @@ const commonTypeDefs = gql`
     # Mutations related to users, messages, and conversations
     type Mutation {
         # Create a new User with a username
-        createUser(username: String!): OpResponse
+        createUsername(username: String!): OpResponse
         # Update a User's details
         updateUser(input: UserUpdateInput!): OpResponse
         # Delete a User by ID
