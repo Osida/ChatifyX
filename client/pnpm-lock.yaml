@@ -12,7 +12,7 @@ dependencies:
     specifier: ^2.1.5
     version: 2.1.5(@chakra-ui/react@2.8.1)(@emotion/react@11.11.1)(next@13.4.16)(react@18.2.0)
   '@chakra-ui/react':
-    specifier: ^2.8.0
+    specifier: ^2.8.1
     version: 2.8.1(@emotion/react@11.11.1)(@emotion/styled@11.11.0)(@types/react@18.2.20)(framer-motion@10.16.4)(react-dom@18.2.0)(react@18.2.0)
   '@emotion/react':
     specifier: ^11.11.1
@@ -45,7 +45,7 @@ dependencies:
     specifier: 13.4.16
     version: 13.4.16(eslint@8.47.0)(typescript@5.1.6)
   framer-motion:
-    specifier: ^10.16.1
+    specifier: ^10.16.4
     version: 10.16.4(react-dom@18.2.0)(react@18.2.0)
   graphql:
     specifier: ^16.8.0
@@ -69,7 +69,7 @@ dependencies:
     specifier: ^7.46.1
     version: 7.46.1(react@18.2.0)
   react-icons:
-    specifier: ^4.10.1
+    specifier: ^4.11.0
     version: 4.11.0(react@18.2.0)
   tailwindcss:
     specifier: 3.3.3
@@ -2044,7 +2044,7 @@ packages:
     hasBin: true
     dependencies:
       caniuse-lite: 1.0.30001533
-      electron-to-chromium: 1.4.516
+      electron-to-chromium: 1.4.518
       node-releases: 2.0.13
       update-browserslist-db: 1.0.11(browserslist@4.21.10)
     dev: false
@@ -2279,8 +2279,8 @@ packages:
       esutils: 2.0.3
     dev: false
 
-  /electron-to-chromium@1.4.516:
-    resolution: {integrity: sha512-A8xs6nie7jw/9GFRrCPrrE+maux1M3gSnFe1HVstK6ubH+7v5hMDFq3qoNxTRssYyz6jdzk/1wLebT+9tisLKA==}
+  /electron-to-chromium@1.4.518:
+    resolution: {integrity: sha512-eqbfyW9i/en/qgIPsddW+cuxQvjq3KZmfH+/gc3f/gnynYj0qxee0yRmll69W0SGwiVD+goeU1J9LT6zDHDzlg==}
     dev: false
 
   /emoji-regex@9.2.2:
