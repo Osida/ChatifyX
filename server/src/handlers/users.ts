@@ -1,44 +1,45 @@
 import {supabase} from "../db";
 import {UserData} from "../db/models/users";
 import {handleBodyParse, handleResponse, routeConfig} from "../utils/route/api";
-import {Api} from "../utils/types";
+import {DBResponse} from "../utils/types";
 
 export const getAllUsersHandler = async () => {
     const handlerName = "getAllUsersHandler";
     const {table, successMessage, notFoundMessage} = routeConfig[handlerName];
-    const {data, error}: Api<UserData> = await supabase.from(table).select("*");
+    const {data, error}: DBResponse<UserData> = await supabase.from(table).select("*");
     if (!error && (!data || data.length === 0)) return new Response(JSON.stringify({message: notFoundMessage}), {status: 404});
-    return handleResponse(handlerName, error, successMessage);
+    return handleResponse(handlerName, error, successMessage, data);
 };
 
 export const getUserByIdHandler = async ({params: {id}}: { params: { id: string } }) => {
     const handlerName = "getUserByIdHandler";
     const {table, successMessage, notFoundMessage} = routeConfig[handlerName];
-    const {data, error}: Api<UserData> = await supabase.from(table).select("*").eq("id", parseInt(id));
+    const {data, error}: DBResponse<UserData> = await supabase.from(table).select("*").eq("id", parseInt(id));
     if (!error && (!data || data.length === 0)) return new Response(JSON.stringify({message: notFoundMessage}), {status: 404});
-    return handleResponse(handlerName, error, successMessage);
+    return handleResponse(handlerName, error, successMessage, data);
 };
 
 export const createUserHandler = async ({body}: { body: any }) => {
-    const handlerName = "createUserHandler";
-    const {table, successMessage} = routeConfig[handlerName];
-    const parsedBody = handleBodyParse(handlerName, body);
-    const {error}: Api<UserData> = await supabase.from(table).insert(parsedBody);
-    return handleResponse(handlerName, error, successMessage);
+    console.log("body: ", body)
+    // const handlerName = "createUserHandler";
+    // const {table, successMessage} = routeConfig[handlerName];
+    // const parsedBody = handleBodyParse(handlerName, body);
+    // const {error}: Api<UserData> = await supabase.from(table).insert(parsedBody);
+    // return handleResponse(handlerName, error, successMessage);
 };
 
 export const updateUserHandler = async ({params: {id}, body}: { params: { id: string }, body: any }) => {
     const handlerName = "updateUserHandler";
     const {table, successMessage} = routeConfig[handlerName];
     const parsedBody = handleBodyParse(handlerName, body);
-    const {error}: Api<UserData> = await supabase.from(table).update(parsedBody).eq("id", parseInt(id));
+    const {error}: DBResponse<UserData> = await supabase.from(table).update(parsedBody).eq("id", parseInt(id));
     return handleResponse(handlerName, error, successMessage);
 };
 
 export const deleteUserHandler = async ({params: {id}}: { params: { id: string } }) => {
     const handlerName = "deleteUserHandler";
     const {table, successMessage} = routeConfig[handlerName];
-    const {error}: Api<UserData> = await supabase.from(table).delete().eq("id", parseInt(id));
+    const {error}: DBResponse<UserData> = await supabase.from(table).delete().eq("id", parseInt(id));
     return handleResponse(handlerName, error, successMessage);
 };
 

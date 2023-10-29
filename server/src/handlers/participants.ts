@@ -1,6 +1,6 @@
 import {supabase} from "../db";
 import {ParticipantData} from "../db/models/participants";
-import {Api} from "../utils/types";
+import {DBResponse} from "../utils/types";
 import {handleBodyParse, handleResponse, routeConfig} from "../utils/route/api";
 
 export const getAllParticipantsByConversationHandler = async ({params: {id}}: { params: { id: string } }) => {
@@ -9,16 +9,16 @@ export const getAllParticipantsByConversationHandler = async ({params: {id}}: { 
     const {
         data,
         error
-    }: Api<ParticipantData> = await supabase.from(table).select("*").eq("conversation_id", parseInt(id));
+    }: DBResponse<ParticipantData> = await supabase.from(table).select("*").eq("conversation_id", parseInt(id));
     if (!error && (!data || data.length === 0)) return new Response(JSON.stringify({message: notFoundMessage}), {status: 404});
-    return handleResponse(handlerName, error, successMessage);
+    return handleResponse(handlerName, error, successMessage, data);
 };
 
 export const createParticipantHandler = async ({body}: { body: any }) => {
     const handlerName = "createParticipantHandler";
     const {table, successMessage} = routeConfig[handlerName];
     const parsedBody = handleBodyParse(handlerName, body);
-    const {error}: Api<ParticipantData> = await supabase.from(table).insert(parsedBody);
+    const {error}: DBResponse<ParticipantData> = await supabase.from(table).insert(parsedBody);
     return handleResponse(handlerName, error, successMessage);
 };
 
@@ -26,13 +26,13 @@ export const updateParticipantHandler = async ({params: {id}, body}: { params: {
     const handlerName = "updateParticipantHandler";
     const {table, successMessage} = routeConfig[handlerName];
     const parsedBody = handleBodyParse(handlerName, body);
-    const {error}: Api<ParticipantData> = await supabase.from(table).update(parsedBody).eq("id", parseInt(id));
+    const {error}: DBResponse<ParticipantData> = await supabase.from(table).update(parsedBody).eq("id", parseInt(id));
     return handleResponse(handlerName, error, successMessage);
 };
 
 export const deleteParticipantHandler = async ({params: {id}, body}: { params: { id: string }, body: any }) => {
     const handlerName = "deleteParticipantHandler";
     const {table, successMessage} = routeConfig[handlerName];
-    const {error}: Api<ParticipantData> = await supabase.from(table).delete().eq("id", parseInt(id));
+    const {error}: DBResponse<ParticipantData> = await supabase.from(table).delete().eq("id", parseInt(id));
     return handleResponse(handlerName, error, successMessage);
 };

@@ -1,4 +1,4 @@
-import {RouteConfiguration} from "../types/api";
+import {RouteConfiguration} from "../types/DBResponse";
 import {dbTables} from "../../db";
 
 export const participantsConfig: Record<string, RouteConfiguration> = {

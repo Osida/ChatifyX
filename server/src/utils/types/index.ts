@@ -1,5 +1,5 @@
-import {Api} from "./api";
+import {DBResponse} from "./DBResponse";
 
 export {
-    Api
+    DBResponse
 }

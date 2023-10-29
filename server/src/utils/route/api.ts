@@ -1,6 +1,6 @@
 import {PostgrestError} from "@supabase/supabase-js";
 import {logError} from "../logging";
-import {RouteConfiguration} from "../types/api";
+import {RouteConfiguration} from "../types/DBResponse";
 import {usersConfig} from "./users";
 import {conversationsConfig} from "./conversations";
 import {participantsConfig} from "./participants";
@@ -13,13 +13,13 @@ export const routeConfig: Record<string, RouteConfiguration> = {
     ...messagesConfig,
 };
 
-export const handleResponse = (handlerName: string, error: PostgrestError | Error | null, successMsg: string) => {
+export const handleResponse = <T>(handlerName: string, error: PostgrestError | Error | null, successMsg: string, data?: T | null) => {
     if (error) {
         logError(handlerName, error);
         return new Response(JSON.stringify({message: error.message}), {status: 500});
     }
 
-    return new Response(JSON.stringify({message: successMsg}), {
+    return new Response(JSON.stringify({message: successMsg, data: data}), {
         status: 200,
         headers: {"Content-Type": "application/json"}
     });
