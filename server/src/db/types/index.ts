@@ -11,8 +11,7 @@ export interface RouteConfig {
     notFoundMessage: string
 }
 
-// Base schema for all DB entities
-interface BaseSchema {
+export interface BaseSchema {
     id: number,
     created_at: string
 }
@@ -27,7 +26,7 @@ export interface UserSchema extends BaseSchema {
     status: string | null
 }
 
-export type UserData = UserSchema[] | [] | null
+export type UserDataSchema = UserSchema[] | [] | null
 
 export interface MessageSchema extends BaseSchema {
     user_id: number,
@@ -37,13 +36,13 @@ export interface MessageSchema extends BaseSchema {
     read: boolean
 }
 
-export type MessageData = MessageSchema[] | [] | null
+export type MessageDataSchema = MessageSchema[] | [] | null
 
 export interface ConversationSchema extends BaseSchema {
     name: string;
 }
 
-export type ConversationData = ConversationSchema[] | [] | null
+export type ConversationDataSchema = ConversationSchema[] | [] | null
 
 export interface ParticipantSchema extends BaseSchema {
     user_id: number,
@@ -52,4 +51,4 @@ export interface ParticipantSchema extends BaseSchema {
     joined_at: string
 }
 
-export type ParticipantData = ParticipantSchema[] | [] | null
+export type ParticipantDataSchema = ParticipantSchema[] | [] | null

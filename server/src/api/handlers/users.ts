@@ -1,11 +1,12 @@
-import {DBResponse, supabase, UserData} from "../../db";
+import {supabase} from "../../db";
 import {handleBodyParse, handleResponse, routeConfig} from "../index";
+import {DBResponse, UserDataSchema} from "../../db/types";
 
 export const getAllUsersHandler = async () => {
     const handlerName = "getAllUsersHandler";
     const {table, successMessage, notFoundMessage} = routeConfig[handlerName];
 
-    const {data, error}: DBResponse<UserData> = await supabase
+    const {data, error}: DBResponse<UserDataSchema> = await supabase
         .from(table)
         .select("*");
 
@@ -19,7 +20,7 @@ export const getUserByIdHandler = async ({params: {id}}: { params: { id: string 
     const handlerName = "getUserByIdHandler";
     const {table, successMessage, notFoundMessage} = routeConfig[handlerName];
 
-    const {data, error}: DBResponse<UserData> = await supabase
+    const {data, error}: DBResponse<UserDataSchema> = await supabase
         .from(table)
         .select("*")
         .eq("id", parseInt(id));
@@ -35,7 +36,7 @@ export const createUserHandler = async ({body}: { body: any }) => {
     const {table, successMessage} = routeConfig[handlerName];
 
     const parsedBody = handleBodyParse(handlerName, body);
-    const {error}: DBResponse<UserData> = await supabase
+    const {error}: DBResponse<UserDataSchema> = await supabase
         .from(table)
         .insert(parsedBody);
 
@@ -47,7 +48,7 @@ export const updateUserHandler = async ({params: {id}, body}: { params: { id: st
     const {table, successMessage} = routeConfig[handlerName];
 
     const parsedBody = handleBodyParse(handlerName, body);
-    const {error}: DBResponse<UserData> = await supabase
+    const {error}: DBResponse<UserDataSchema> = await supabase
         .from(table)
         .update(parsedBody)
         .eq("id", parseInt(id));
@@ -59,7 +60,7 @@ export const deleteUserHandler = async ({params: {id}}: { params: { id: string }
     const handlerName = "deleteUserHandler";
     const {table, successMessage} = routeConfig[handlerName];
 
-    const {error}: DBResponse<UserData> = await supabase
+    const {error}: DBResponse<UserDataSchema> = await supabase
         .from(table)
         .delete()
         .eq("id", parseInt(id));

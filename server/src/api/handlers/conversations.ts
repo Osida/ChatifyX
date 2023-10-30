@@ -1,11 +1,12 @@
-import {ConversationData, DBResponse, supabase} from "../../db";
+import {supabase} from "../../db";
 import {handleBodyParse, handleResponse, routeConfig} from "../index";
+import {ConversationDataSchema, DBResponse} from "../../db/types";
 
 export const getAllConversationsHandler = async () => {
     const handlerName = "getAllConversationsHandler";
     const {table, successMessage, notFoundMessage} = routeConfig[handlerName];
 
-    const {data, error}: DBResponse<ConversationData> = await supabase
+    const {data, error}: DBResponse<ConversationDataSchema> = await supabase
         .from(table)
         .select("*");
 
@@ -18,7 +19,7 @@ export const getConversationByIdHandler = async ({params: {id}}: { params: { id:
     const handlerName = "getConversationByIdHandler";
     const {table, successMessage, notFoundMessage} = routeConfig[handlerName];
 
-    const {data, error}: DBResponse<ConversationData> = await supabase
+    const {data, error}: DBResponse<ConversationDataSchema> = await supabase
         .from(table).select("*")
         .eq("id", parseInt(id));
 
@@ -33,7 +34,7 @@ export const createConversationHandler = async ({body}: { body: any }) => {
     const {table, successMessage} = routeConfig[handlerName];
 
     const parsedBody = handleBodyParse(handlerName, body);
-    const {error}: DBResponse<ConversationData> = await supabase
+    const {error}: DBResponse<ConversationDataSchema> = await supabase
         .from(table)
         .insert(parsedBody);
 
@@ -45,7 +46,7 @@ export const updateConversationHandler = async ({params: {id}, body}: { params: 
     const {table, successMessage} = routeConfig[handlerName];
 
     const parsedBody = handleBodyParse(handlerName, body);
-    const {error}: DBResponse<ConversationData> = await supabase
+    const {error}: DBResponse<ConversationDataSchema> = await supabase
         .from(table)
         .update(parsedBody)
         .eq("id", parseInt(id));
@@ -57,7 +58,7 @@ export const deleteConversationHandler = async ({params: {id}, body}: { params: 
     const handlerName = "deleteParticipantHandler";
     const {table, successMessage} = routeConfig[handlerName];
 
-    const {error}: DBResponse<ConversationData> = await supabase
+    const {error}: DBResponse<ConversationDataSchema> = await supabase
         .from(table)
         .delete()
         .eq("id", parseInt(id));

@@ -1,4 +1,5 @@
 import {Elysia} from "elysia";
+import {swagger} from "@elysiajs/swagger";
 import {
     createConversationHandler,
     createMessageHandler,
@@ -20,9 +21,9 @@ import {
     updateUserHandler
 } from "./api";
 
-const app = new Elysia();
+const app = new Elysia().use(swagger());
 
-app.get("/", () => "Hello, welcome to ChatifyX's api");
+app.get("/", () => "Hello, welcome to ChatifyX's API");
 
 app.group("/users", app => app
     .get("/", getAllUsersHandler)
