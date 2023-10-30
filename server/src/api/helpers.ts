@@ -1,17 +1,5 @@
 import {PostgrestError} from "@supabase/supabase-js";
-import {logError} from "../logging";
-import {RouteConfiguration} from "../types/DBResponse";
-import {usersConfig} from "./users";
-import {conversationsConfig} from "./conversations";
-import {participantsConfig} from "./participants";
-import {messagesConfig} from "./messages";
-
-export const routeConfig: Record<string, RouteConfiguration> = {
-    ...usersConfig,
-    ...conversationsConfig,
-    ...participantsConfig,
-    ...messagesConfig,
-};
+import {logError} from "../utils";
 
 export const handleResponse = <T>(handlerName: string, error: PostgrestError | Error | null, successMsg: string, data?: T | null) => {
     if (error) {

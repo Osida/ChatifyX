@@ -18,7 +18,7 @@ import {
     updateMessageHandler,
     updateParticipantHandler,
     updateUserHandler
-} from "./handlers";
+} from "./api";
 
 const app = new Elysia();
 

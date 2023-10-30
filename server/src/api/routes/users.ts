@@ -1,7 +1,6 @@
-import {RouteConfiguration} from "../types/DBResponse";
-import {dbTables} from "../../db";
+import {dbTables, RouteConfig} from "../../db";
 
-export const usersConfig: Record<string, RouteConfiguration> = {
+export const usersConfig: Record<string, RouteConfig> = {
     getAllUsersHandler: {
         table: dbTables.users,
         successMessage: "Successfully retrieved users",
