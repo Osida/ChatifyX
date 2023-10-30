@@ -20,12 +20,11 @@ export const getUserByIdHandler = async ({params: {id}}: { params: { id: string 
 };
 
 export const createUserHandler = async ({body}: { body: any }) => {
-    console.log("body: ", body)
-    // const handlerName = "createUserHandler";
-    // const {table, successMessage} = routeConfig[handlerName];
-    // const parsedBody = handleBodyParse(handlerName, body);
-    // const {error}: Api<UserData> = await supabase.from(table).insert(parsedBody);
-    // return handleResponse(handlerName, error, successMessage);
+    const handlerName = "createUserHandler";
+    const {table, successMessage} = routeConfig[handlerName];
+    const parsedBody = handleBodyParse(handlerName, body);
+    const {error}: DBResponse<UserData> = await supabase.from(table).insert(parsedBody);
+    return handleResponse(handlerName, error, successMessage);
 };
 
 export const updateUserHandler = async ({params: {id}, body}: { params: { id: string }, body: any }) => {
