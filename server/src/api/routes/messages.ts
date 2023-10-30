@@ -1,7 +1,6 @@
-import {RouteConfiguration} from "../types/DBResponse";
-import {dbTables} from "../../db";
+import {dbTables, RouteConfig} from "../../db";
 
-export const messagesConfig: Record<string, RouteConfiguration> = {
+export const messagesConfig: Record<string, RouteConfig> = {
     getAllMessagesByConversationHandler: {
         table: dbTables.messages,
         successMessage: "Successfully retrieved messages",

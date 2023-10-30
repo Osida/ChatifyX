@@ -5,26 +5,28 @@ import {
     getUserByIdHandler,
     getUserByUsernameHandler,
     updateUserHandler
-} from "./users";
+} from "./handlers/users";
 import {
     createConversationHandler,
     deleteConversationHandler,
     getAllConversationsHandler,
     getConversationByIdHandler,
     updateConversationHandler
-} from "./conversations";
+} from "./handlers/conversations";
 import {
     createMessageHandler,
     deleteMessageHandler,
     getAllMessagesByConversationHandler,
     updateMessageHandler
-} from "./messages";
+} from "./handlers/messages";
 import {
     createParticipantHandler,
     deleteParticipantHandler,
     getAllParticipantsByConversationHandler,
     updateParticipantHandler
-} from "./participants";
+} from "./handlers/participants";
+import {handleBodyParse, handleResponse} from "./helpers";
+import {routeConfig} from "./routeConfig";
 
 export {
     getAllUsersHandler,
@@ -45,5 +47,8 @@ export {
     deleteConversationHandler,
     createParticipantHandler,
     updateParticipantHandler,
-    deleteParticipantHandler
+    deleteParticipantHandler,
+    handleBodyParse,
+    handleResponse,
+    routeConfig,
 };
