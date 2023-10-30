@@ -1,4 +1,5 @@
-import {dbTables, RouteConfig} from "../../db";
+import {dbTables} from "../../db";
+import {RouteConfig} from "../../db/types";
 
 export const usersConfig: Record<string, RouteConfig> = {
     getAllUsersHandler: {
