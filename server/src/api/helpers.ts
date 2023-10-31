@@ -7,7 +7,7 @@ export const handleResponse = <T>(handlerName: string, error: PostgrestError | E
         return new Response(JSON.stringify({message: error.message}), {status: 500});
     }
 
-    return new Response(JSON.stringify({message: successMsg, data: data}), {
+    return new Response(JSON.stringify({code: 200, message: successMsg, data: data}), {
         headers: {"Content-Type": "application/json"},
         status: 200,
     });

@@ -22,7 +22,13 @@ import {
     updateParticipantHandler,
     updateUserHandler
 } from "./api";
-import {APIResponseData, UserDataSchema} from "./db/types";
+import {
+    APIResponseData,
+    ConversationDataSchema,
+    MessageDataSchema,
+    ParticipantDataSchema,
+    UserDataSchema
+} from "./db/types";
 import {GraphQLScalarType} from "graphql/type";
 import {Kind} from "graphql/language";
 
@@ -89,19 +95,56 @@ app.use(
             scalar Date
 
             type Query {
+                getUsers: [User]
                 getUserById(id: ID!): [User]
+                getParticipantsByConversationId(id: ID!): [Participant]
+                getConversations: [Conversation]
+                getConversationById(id: ID!): [Conversation]
+                getMessageById(id: ID!): [Message]
             }
+
+            type OperationResponse {
+                code: Int!
+                success: Boolean!
+                message: String!
+                payload: Payload
+            }
+            union Payload = User | Message | Conversation | Participant
 
             type User {
                 id: Int!
-                username: String
                 email: String
+                username: String
                 phone_number: String
                 password_hash: String
-                last_login: Date!
-                profile_picture: String
-                created_at: Date!
                 online_status: Boolean!
+                profile_picture: String
+                last_login: Date!
+                created_at: Date!
+            }
+
+            type Participant {
+                id: Int!
+                user_id: Int!
+                conversation_id: Int!
+                last_read_message_id: Int
+                created_at: Date!
+            }
+
+            type Conversation {
+                id: Int!
+                name: String
+                created_at: Date!
+            }
+
+            type Message {
+                id: Int!
+                user_id: Int!
+                conversation_id: Int!
+                message_text: String
+                message_type: String
+                read: Boolean
+                created_at: Date!
             }
         `,
         context: {
@@ -111,87 +154,75 @@ app.use(
         },
         resolvers: {
             Query: {
+                getUsers: async (parent, args, context, info) => {
+                    try {
+                        const response = await getAllUsersHandler();
+                        const {message, data}: APIResponseData<UserDataSchema> = await response.json();
+                        if (response.status === 404) return [];
+                        return data;
+                    } catch (error) {
+                        console.error(`Error in resolver getUsers: `, error);
+                        return null;
+                    }
+                },
                 getUserById: async (parent, {id}: { id: string }, context, info) => {
                     try {
                         const response = await getUserByIdHandler({params: {id}});
                         const {message, data}: APIResponseData<UserDataSchema> = await response.json();
+                        if (response.status === 404) return [];
                         return data;
                     } catch (error) {
                         console.error(`Error in resolver getUserById: `, error);
                         return null;
                     }
-                }
+                },
+                getParticipantsByConversationId: async (parent, {id}: { id: string }, context, info) => {
+                    try {
+                        const response = await getAllParticipantsByConversationHandler({params: {id}});
+                        const {message, data}: APIResponseData<ParticipantDataSchema> = await response.json();
+                        if (response.status === 404) return [];
+                        return data;
+                    } catch (error) {
+                        console.error(`Error in resolver getParticipantsByConversationId: `, error);
+                        return null;
+                    }
+                },
+                getConversations: async (parent, args, context, info) => {
+                    try {
+                        const response = await getAllConversationsHandler();
+                        const {message, data}: APIResponseData<ConversationDataSchema> = await response.json();
+                        if (response.status === 404) return [];
+                        return data;
+                    } catch (error) {
+                        console.error(`Error in resolver getConversations: `, error);
+                        return null;
+                    }
+                },
+                getConversationById: async (parent, {id}: { id: string }, context, info) => {
+                    try {
+                        const response = await getConversationByIdHandler({params: {id}});
+                        const {message, data}: APIResponseData<ConversationDataSchema> = await response.json();
+                        if (response.status === 404) return [];
+                        return data;
+                    } catch (error) {
+                        console.error(`Error in resolver getConversationById: `, error);
+                        return null;
+                    }
+                },
+                getMessageById: async (parent, {id}: { id: string }, context, info) => {
+                    try {
+                        const response = await getAllMessagesByConversationHandler({params: {id}});
+                        const {message, data}: APIResponseData<MessageDataSchema> = await response.json();
+                        if (response.status === 404) return [];
+                        return data;
+                    } catch (error) {
+                        console.error(`Error in resolver getAllMessagesByConversationHandler: `, error);
+                        return null;
+                    }
+                },
             }
         },
     })
-    // yoga({
-    //     typeDefs: /* GraphQL */`
-    //         type CommonFields {
-    //             id: ID!
-    //             created_at: String
-    //         }
-    //
-    //         type OperationResponse {
-    //             code: Int!
-    //             success: Boolean!
-    //             message: String!
-    //             payload: Payload
-    //         }
-    //
-    //         union Payload = User | Message | Conversation | Participant
-    //
-    //         type User {
-    //             id: ID!
-    //             created_at: String
-    //             username: String
-    //             email: String
-    //             phone_number: String
-    //             password_hash: String
-    //             last_login: String
-    //             profile_picture: String
-    //             status: String
-    //         }
-    //
-    //         type Message {
-    //             id: ID!
-    //             created_at: String
-    //             user_id: ID!
-    //             conversation_id: ID!
-    //             message_text: String
-    //             message_type: String
-    //             read: Boolean
-    //         }
-    //
-    //         type Conversation {
-    //             id: ID!
-    //             created_at: String
-    //             name: String
-    //         }
-    //
-    //         type Participant {
-    //             id: ID!
-    //             created_at: String
-    //             user_id: ID!
-    //             conversation_id: ID!
-    //             last_read_message_id: ID
-    //             created_at: String
-    //         }
-    //
-    //         type Query {
-    //             getUserById(id: ID!): [User]
-    //         }
-    //     `,
-    //     resolvers: {
-    //         Query: {
-    //             getUserById: async (_: any, {id}: { id: string }) => {
-    //                 if (!id) throw new Error("No ID provided");
-    //                 const user = getUserByIdHandler({params: {id: id}});
-    //                 console.log(user);
-    //                 return null;
-    //             }
-    //         }
-    //     }
-    // })
 );
 
 app.listen(8000, ({hostname, port}) => {
