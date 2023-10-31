@@ -23,7 +23,7 @@ export interface UserSchema extends BaseSchema {
     password_hash: string | null,
     last_login: string,
     profile_picture: string | null,
-    status: string | null
+    status: false
 }
 
 export type UserDataSchema = UserSchema[] | [] | null
