@@ -5,7 +5,7 @@ import {DBResponse, ParticipantDataSchema} from "../../db/types";
 export const getAllParticipantsByConversationHandler = async ({params: {id}}: { params: { id: string } }) => {
     const handlerName = "getAllParticipantsByConversationHandler";
     const {table, successMessage, notFoundMessage} = routeConfig[handlerName];
-
+    console.log("getAllParticipantsByConversationHandler")
     const {data, error}: DBResponse<ParticipantDataSchema> = await supabase
         .from(table)
         .select("*")

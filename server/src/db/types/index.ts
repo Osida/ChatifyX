@@ -36,8 +36,8 @@ export type UserDataSchema = UserSchema[] | [] | null
 export interface MessageSchema extends BaseSchema {
     user_id: number,
     conversation_id: number,
-    message_text: string,
-    message_type: string,
+    message_text: string | null,
+    message_type: string | null,
     read: boolean
 }
 
@@ -53,7 +53,6 @@ export interface ParticipantSchema extends BaseSchema {
     user_id: number,
     conversation_id: number,
     last_read_message_id: number | null,
-    joined_at: string
 }
 
 export type ParticipantDataSchema = ParticipantSchema[] | [] | null
