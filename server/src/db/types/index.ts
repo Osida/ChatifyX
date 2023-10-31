@@ -5,6 +5,11 @@ export interface DBResponse<T> {
     error: PostgrestError | null;
 }
 
+export interface APIResponseData<T> {
+    message: string;
+    data?: T | null;
+}
+
 export interface RouteConfig {
     table: string,
     successMessage: string,
@@ -13,17 +18,17 @@ export interface RouteConfig {
 
 export interface BaseSchema {
     id: number,
-    created_at: string
+    created_at: Date
 }
 
 export interface UserSchema extends BaseSchema {
-    username: string | null,
-    email: string | null,
-    phone_number: string | null,
-    password_hash: string | null,
-    last_login: string,
-    profile_picture: string | null,
-    status: false
+    username: string | null;
+    email: string | null;
+    phone_number: string | null;
+    password_hash: string | null;
+    last_login: Date;
+    profile_picture: string | null;
+    online_status: boolean;
 }
 
 export type UserDataSchema = UserSchema[] | [] | null

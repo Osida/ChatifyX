@@ -22,6 +22,9 @@ import {
     updateParticipantHandler,
     updateUserHandler
 } from "./api";
+import {APIResponseData, UserDataSchema} from "./db/types";
+import {GraphQLScalarType} from "graphql/type";
+import {Kind} from "graphql/language";
 
 const app = new Elysia().use(swagger());
 
@@ -57,30 +60,48 @@ app.group("/participants", app => app
     .delete("/:id", deleteParticipantHandler)
 );
 
-// Add GraphQL Yoga server to the existing Elysia API server
-// const myYoga = createYoga({
-//     schema: createSchema({typeDefs, resolvers})
-// });
+const resolverMap = {
+    Date: new GraphQLScalarType({
+        name: "Date",
+        description: "Date custom scalar type",
+        // converts a value from the client into a JavaScript Date object
+        parseValue(value) {
+            return new Date(value as string | number | Date); // value from the client
+        },
+        // converts a JS Date object into a format that can be sent to the client
+        serialize(value) {
+            return (value as Date).getTime(); // value sent to the client
+        },
+        // converts an inline value from the client into a JS Date object
+        parseLiteral(ast) {
+            if (ast.kind === Kind.INT)
+                return new Date(ast.value); // ast value is always in string format
+            return null;
+        },
+    }),
+};
+
 
 app.use(
     yoga({
 
         typeDefs: /* GraphQL */`
+            scalar Date
+
             type Query {
-                hi: String
                 getUserById(id: ID!): [User]
             }
 
             type User {
-                id: ID!
-                created_at: String
+                id: Int!
                 username: String
                 email: String
                 phone_number: String
                 password_hash: String
-                last_login: String
+                last_login: Date!
                 profile_picture: String
-                status: String
+                created_at: Date!
+                online_status: Boolean!
             }
         `,
         context: {
@@ -90,15 +111,15 @@ app.use(
         },
         resolvers: {
             Query: {
-                hi: async (parent, args, context, info) => {
-                    console.log("args: ", args);
-                    console.log("context: ", context);
-                    return context.name;
-                },
-                getUserById: async (parent, args, context, info) => {
-                    console.log("args: ", args);
-                    // console.log("context: ", context);
-                    return null;
+                getUserById: async (parent, {id}: { id: string }, context, info) => {
+                    try {
+                        const response = await getUserByIdHandler({params: {id}});
+                        const {message, data}: APIResponseData<UserDataSchema> = await response.json();
+                        return data;
+                    } catch (error) {
+                        console.error(`Error in resolver getUserById: `, error);
+                        return null;
+                    }
                 }
             }
         },
