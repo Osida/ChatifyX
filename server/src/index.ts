@@ -87,7 +87,6 @@ const resolverMap = {
     }),
 };
 
-
 app.use(
     yoga({
 
@@ -95,21 +94,13 @@ app.use(
             scalar Date
 
             type Query {
-                getUsers: [User]
-                getUserById(id: ID!): [User]
-                getParticipantsByConversationId(id: ID!): [Participant]
-                getConversations: [Conversation]
-                getConversationById(id: ID!): [Conversation]
-                getMessageById(id: ID!): [Message]
+                getUsers: UserPayload
+                getUserById(id: ID!): UserPayload
+                getParticipantsByConversationId(id: ID!): ParticipantPayload
+                getConversations: ConversationPayload
+                getConversationById(id: ID!): ConversationPayload
+                getMessageById(id: ID!): MessagePayload
             }
-
-            type OperationResponse {
-                code: Int!
-                success: Boolean!
-                message: String!
-                payload: Payload
-            }
-            union Payload = User | Message | Conversation | Participant
 
             type User {
                 id: Int!
@@ -146,78 +137,215 @@ app.use(
                 read: Boolean
                 created_at: Date!
             }
+
+            interface Payload {
+                code: Int!
+                success: Boolean!
+                message: String!
+            }
+
+            type UserPayload implements Payload {
+                code: Int!
+                success: Boolean!
+                message: String!
+                data: [User]
+            }
+
+            type MessagePayload implements Payload {
+                code: Int!
+                success: Boolean!
+                message: String!
+                data: [Message]
+            }
+
+            type ConversationPayload implements Payload {
+                code: Int!
+                success: Boolean!
+                message: String!
+                data: [Conversation]
+            }
+
+            type ParticipantPayload implements Payload {
+                code: Int!
+                success: Boolean!
+                message: String!
+                data: [Participant]
+            }
+
         `,
         context: {
-            name: "Mobius"
+            name: "Osida"
         },
         useContext(_) {
         },
         resolvers: {
             Query: {
-                getUsers: async (parent, args, context, info) => {
+                getUsers: async () => {
+                    const payload: {
+                        code: number,
+                        success: boolean,
+                        message: string,
+                        data: UserDataSchema | undefined
+                    } = {
+                        code: 500,
+                        success: false,
+                        message: "Internal server error",
+                        data: [],
+                    };
+
                     try {
                         const response = await getAllUsersHandler();
                         const {message, data}: APIResponseData<UserDataSchema> = await response.json();
-                        if (response.status === 404) return [];
-                        return data;
+
+                        payload.code = response.status;
+                        payload.success = response.status === 200;
+                        payload.message = message;
+                        payload.data = data;
+
+                        return payload;
                     } catch (error) {
                         console.error(`Error in resolver getUsers: `, error);
-                        return null;
+                        return payload;
                     }
                 },
-                getUserById: async (parent, {id}: { id: string }, context, info) => {
+                getUserById: async (_, {id}: { id: string }) => {
+                    const payload: {
+                        code: number,
+                        success: boolean,
+                        message: string,
+                        data: UserDataSchema | undefined
+                    } = {
+                        code: 500,
+                        success: false,
+                        message: "Internal server error",
+                        data: [],
+                    };
+
                     try {
                         const response = await getUserByIdHandler({params: {id}});
                         const {message, data}: APIResponseData<UserDataSchema> = await response.json();
-                        if (response.status === 404) return [];
-                        return data;
+
+                        payload.code = response.status;
+                        payload.success = response.status === 200;
+                        payload.message = message;
+                        payload.data = data;
+
+                        return payload;
                     } catch (error) {
                         console.error(`Error in resolver getUserById: `, error);
-                        return null;
+                        return payload;
                     }
                 },
-                getParticipantsByConversationId: async (parent, {id}: { id: string }, context, info) => {
+                getParticipantsByConversationId: async (_, {id}: { id: string }) => {
+                    const payload: {
+                        code: number,
+                        success: boolean,
+                        message: string,
+                        data: ParticipantDataSchema | undefined
+                    } = {
+                        code: 500,
+                        success: false,
+                        message: "Internal server error",
+                        data: [],
+                    };
+
                     try {
                         const response = await getAllParticipantsByConversationHandler({params: {id}});
                         const {message, data}: APIResponseData<ParticipantDataSchema> = await response.json();
-                        if (response.status === 404) return [];
-                        return data;
+
+                        payload.code = response.status;
+                        payload.success = response.status === 200;
+                        payload.message = message;
+                        payload.data = data;
+
+                        return payload;
                     } catch (error) {
-                        console.error(`Error in resolver getParticipantsByConversationId: `, error);
-                        return null;
+                        console.error(`Error in resolver getUserById: `, error);
+                        return payload;
                     }
                 },
-                getConversations: async (parent, args, context, info) => {
+                getConversations: async () => {
+                    const payload: {
+                        code: number,
+                        success: boolean,
+                        message: string,
+                        data: ConversationDataSchema | undefined
+                    } = {
+                        code: 500,
+                        success: false,
+                        message: "Internal server error",
+                        data: [],
+                    };
+
                     try {
                         const response = await getAllConversationsHandler();
                         const {message, data}: APIResponseData<ConversationDataSchema> = await response.json();
-                        if (response.status === 404) return [];
-                        return data;
+
+                        payload.code = response.status;
+                        payload.success = response.status === 200;
+                        payload.message = message;
+                        payload.data = data;
+
+                        return payload;
                     } catch (error) {
                         console.error(`Error in resolver getConversations: `, error);
-                        return null;
+                        return payload;
                     }
                 },
-                getConversationById: async (parent, {id}: { id: string }, context, info) => {
+                getConversationById: async (_, {id}: { id: string }) => {
+                    const payload: {
+                        code: number,
+                        success: boolean,
+                        message: string,
+                        data: ConversationDataSchema | undefined
+                    } = {
+                        code: 500,
+                        success: false,
+                        message: "Internal server error",
+                        data: [],
+                    };
+
                     try {
                         const response = await getConversationByIdHandler({params: {id}});
                         const {message, data}: APIResponseData<ConversationDataSchema> = await response.json();
-                        if (response.status === 404) return [];
-                        return data;
+
+                        payload.code = response.status;
+                        payload.success = response.status === 200;
+                        payload.message = message;
+                        payload.data = data;
+
+                        return payload;
                     } catch (error) {
                         console.error(`Error in resolver getConversationById: `, error);
-                        return null;
+                        return payload;
                     }
                 },
-                getMessageById: async (parent, {id}: { id: string }, context, info) => {
+                getMessageById: async (_, {id}: { id: string }) => {
+                    const payload: {
+                        code: number,
+                        success: boolean,
+                        message: string,
+                        data: MessageDataSchema | undefined
+                    } = {
+                        code: 500,
+                        success: false,
+                        message: "Internal server error",
+                        data: [],
+                    };
+
                     try {
                         const response = await getAllMessagesByConversationHandler({params: {id}});
                         const {message, data}: APIResponseData<MessageDataSchema> = await response.json();
-                        if (response.status === 404) return [];
-                        return data;
+
+                        payload.code = response.status;
+                        payload.success = response.status === 200;
+                        payload.message = message;
+                        payload.data = data;
+
+                        return payload;
                     } catch (error) {
                         console.error(`Error in resolver getAllMessagesByConversationHandler: `, error);
-                        return null;
+                        return payload;
                     }
                 },
             }
